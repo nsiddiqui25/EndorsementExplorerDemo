@@ -1,0 +1,35 @@
+<form novalidate #form="ngForm" (submit)="onSubmit(form)">
+  <div class="row">
+    <div class="form-group col-md-6">
+      <label>Form Version ID</label>
+      <input class="form-control form-control-md" name="formVersionId"
+      #formVersionId="ngModel" [(ngModel)]="service.formData.formVersionId"
+      [value]="service.formData.formVersionId" required>
+    </div>
+    <div class="form-group col-md-6">
+      <button class="btn btn-info btn-block btn-lg" type="submit" [disabled]=form.invalid>Get Endorsement</button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Form Name</label>
+    <input class="form-control form-control-md" placeholder="Form Name" name="formName"
+    [value]="service.formData.formName" required>
+    <!-- #formName="ngModel" [(ngModel)]="service.formData.formName" disabled> -->
+  </div>
+
+  <div class="row">
+    <div class="form-group col-md-6">
+      <label>Form Version Number</label>
+      <input class="form-control form-control-md" placeholder="Form Version Number" name="formVersionNumber"
+      [value]="service.formData.formVersionNo" required>
+      <!-- #formVersionNumber="ngModel" [(ngModel)]="service.formData.formVersionNo" disabled> -->
+    </div>
+    <div class="form-group col-md-6">
+      <label>Blank Count</label>
+      <input class="form-control form-control-md" placeholder="Blank Count" name="blankCount"
+      [value]="service.formData.blankCount" required>
+      <!-- #blankCount="ngModel" [(ngModel)]="service.formData.blankCount" disabled> -->
+    </div>
+  </div>
+</form>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataRepository.Models.ELD.Prod1;
+using Aspose.Words;
 
 namespace EndorsementDemoAPI.Controllers
 {
@@ -37,9 +38,26 @@ namespace EndorsementDemoAPI.Controllers
             {
                 return NotFound();
             }
-
+            SaveEndorsementDocumentForPreview(id);
             return undFormVersion;
         }
+
+        private void SaveEndorsementDocumentForPreview(int id)
+        {
+            var undFormVersion = _context.UndFormVersion.Find(id);
+            var getFilePath = undFormVersion.FileName.ToString();
+            string newFilePath = "R:\\admin\\UW2\\";
+            string newFileName = "Endrosement.pdf";
+
+            Document endorsement = new Document(getFilePath);
+            endorsement.Save(newFilePath + newFileName, SaveFormat.Pdf);           
+        }
+
+
+        //public async Task<ActionResult<UndFormVersion>> GeFormVersionDoc(int id)
+        //{
+           
+        //}
 
         // PUT: api/UndFormVersions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

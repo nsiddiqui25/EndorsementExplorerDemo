@@ -1,3 +1,5 @@
+import { DemoDto } from './endorsement-demo.service';
+
 export class EndorsementDemo {
   formMasterId: number;
   formVersionId: number;
@@ -24,32 +26,39 @@ export class EndorsementDemo {
   active?: boolean;
   fileName: string;
   rowVersion?: any;
+  somethingNew: any;
 
-  constructor(){
-    this.formMasterId = 0;
-    this.formVersionId = 0;
-    this.formVersionSuf = '';
-    this.formVersionNo = '';
-    this.referenceNo = '';
-    this.formDisplay = '';
-    this.formName = '';
-    this.formInternalName = '';
-    this.formDesc = '';
-    this.formDescChangeAllowed = false;
-    this.signoffRequired = false;
-    this.quoteSort = '';
-    this.binderSort = '';
-    this.revisionDate = '';
-    this.formEffectiveDate = new Date();
-    this.formApprovedDate = new Date();
-    this.formApprovedId = '';
-    this.createdById = '';
-    this.pageCount = 0;
-    this.blankCount = 0;
-    this.lastChangedDate = new Date();
-    this.lastChangedId = '';
-    this.active = false;
-    this.fileName = '';
-    this.rowVersion = {};
-  }
+  // constructor(source: DemoDto){
+  //   if (!source)
+  //   {
+  //     this.formMasterId = 0;
+  //     this.formVersionId = 0;
+  //     this.formVersionSuf = '';
+  //     this.formVersionNo = '';
+  //     this.referenceNo = '';
+  //     this.formDisplay = '';
+  //     this.formName = '';
+  //     this.formInternalName = '';
+  //     this.formDesc = '';
+  //     this.formDescChangeAllowed = false;
+  //     this.signoffRequired = false;
+  //     this.quoteSort = '';
+  //     this.binderSort = '';
+  //     this.revisionDate = '';
+  //     this.formEffectiveDate = new Date();
+  //     this.formApprovedDate = new Date();
+  //     this.formApprovedId = '';
+  //     this.createdById = '';
+  //     this.pageCount = 0;
+  //     this.blankCount = 0;
+  //     this.lastChangedDate = new Date();
+  //     this.lastChangedId = '';
+  //     this.active = false;
+  //     this.fileName = '';
+  //     this.rowVersion = {};
+  //   } else {
+  //     this.formVersionId = source.formVersionId;
+  //     this.somethingNew = 'mapped from api response';
+  //   }
+  // }
 }

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataRepository.Models.ELD.Prod1;
 using Aspose.Words;
+using System.IO;
+using GroupDocs.Viewer;
+using GroupDocs.Viewer.Options;
 
 namespace EndorsementDemoAPI.Controllers
 {
@@ -46,21 +49,80 @@ namespace EndorsementDemoAPI.Controllers
         {
             var undFormVersion = _context.UndFormVersion.Find(id);
             var getFilePath = undFormVersion.FileName.ToString();
-            string newFilePath = "R:\\admin\\UW2\\";
+            string newFilePath = "C:\\Users\\nsiddiqui\\source\\repos\\EndorsementDemo\\EndorsementDemoUI\\src\\assets\\";
             string newFileName = "Endrosement.pdf";
 
             Document endorsement = new Document(getFilePath);
-            endorsement.Save(newFilePath + newFileName, SaveFormat.Pdf);           
+            endorsement.Save(newFilePath + newFileName, SaveFormat.Pdf);
         }
 
+        #region GroupDoc.Viewer Code
+        //Stream stream = GetPageStream();
+        //string uSubString = "_____________";
+        ////Stream stream = GetPageStream();
+        //// convert stream to string
+        //StreamReader reader = new StreamReader(stream);
+        //string text = reader.ReadToEnd();
 
-        //public async Task<ActionResult<UndFormVersion>> GeFormVersionDoc(int id)
+        ////int index = text.IndexOf(uSubString, 0);
+
+        //string subStringPositions = "";
+        //int position = 0;
+
+        //if (text.IndexOf(uSubString, position) == -1)
         //{
-           
+        //    //Console.WriteLine("Your sub-string was not found in your string.\n");
+        //    //return;
         //}
+        //if (String.IsNullOrEmpty(uSubString))
+        //    throw new ArgumentException("the string to find may not be empty", uSubString);
+        //List<int> indexes1 = new List<int>();
+        //for (int index1 = 0; ; index1 += uSubString.Length)
+        //{
+        //    index1 = text.IndexOf(uSubString, index1);
+        //    indexes1.Add(index1);
+        //}
+        ////List<int> indexes = "fooStringfooBar".AllIndexesOf("foo");
+        //while (position < text.Length)
+        //{
+        //    position += text.IndexOf(uSubString, position);
+        //    subStringPositions += Convert.ToString(position) + ", ";
+        //}
+        //File(stream, "text/html");
+
+        //private Stream GetPageStream()
+        //{
+        //    MemoryStream outputStream = new MemoryStream();
+
+        //    //string fileName = "sample.pdf";
+        //    string fileName = "sample.docx";
+        //    FileType fileType = FileType.FromExtension(Path.GetExtension(fileName));
+
+        //    using (Viewer viewer = new Viewer(() => GetSourceFileStream(fileName), () => new GroupDocs.Viewer.Options.LoadOptions(fileType)))
+        //    {
+        //        HtmlViewOptions Options = HtmlViewOptions.ForEmbeddedResources(
+        //            (pageNumber) => outputStream,
+        //            (pageNumber, pageStream) => { });
+        //        viewer.View(Options);
+        //    }
+
+        //    outputStream.Position = 0;
+
+        //    return outputStream;
+        //}
+
+        //private Stream GetSourceFileStream(string fileName) =>
+        //    new MemoryStream(GetSourceFileBytesFromDb(fileName));
+
+        ////TODO: Pull the data from the DB
+        //private byte[] GetSourceFileBytesFromDb(string fileName) =>
+        //    System.IO.File.ReadAllBytes(fileName);
+
 
         // PUT: api/UndFormVersions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #endregion
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUndFormVersion(int id, UndFormVersion undFormVersion)
         {

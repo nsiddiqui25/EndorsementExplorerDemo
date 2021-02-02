@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { EndorsementDemoComponent } from './endorsement-demo/endorsement-demo.component';
 import { EndorsementDemoFormComponent } from './endorsement-demo/endorsement-demo-form/endorsement-demo-form.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    PdfViewerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

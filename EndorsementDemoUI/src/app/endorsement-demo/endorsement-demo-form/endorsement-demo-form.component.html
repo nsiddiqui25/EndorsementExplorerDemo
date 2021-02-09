@@ -1,11 +1,19 @@
+<style>
+  .webViewer{
+    width: 80%;
+    height: 100vh;
+}
+</style>
+
+
 <div class="jumbotron py-3">
-  <h1 class="display-4 text-center">Endorsement Explorer Demo</h1>
+  <h1 class="display-5 text-center">Endorsement Explorer Demo</h1>
 </div>
 <div class="row">
-  <div class="col-md-6">
+  <div>
     <form>
       <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group">
           <label>Form Version ID</label>
           <!-- <input class="form-control form-control-md" name="formVersionId"
           #formVersionId="ngModel" [(ngModel)]="selectedEndorsement.formVersionId"
@@ -38,7 +46,7 @@
     </form>
   </div>
 
-  <div class="col-md-6" align="center">
+  <div align="center">
     <div>
       <button> < </button>
       <button> > </button>
@@ -48,7 +56,7 @@
   </div>
 </div>
 <br />
-<div *ngIf="previewDoc">
+<div [hidden]="!previewDoc">
   <!-- <pdf-viewer [src]="pdfSrc" [render-text]="true"style="display: block;"></pdf-viewer> -->
-  <div #viewer></div>
+  <div #viewer class="webViewer"></div>
 </div>

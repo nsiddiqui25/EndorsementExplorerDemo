@@ -21,11 +21,13 @@ export class EndorsementDemoFormComponent implements AfterViewInit {
   constructor(private endorsementService: EndorsementDemoService) { }
 
   ngAfterViewInit(): void {
-    WebViewer({
-      path: '../../../assets/lib',
-      initialDoc: '../../../assets/Endrosement.pdf'
-    }, this.viewerRef.nativeElement).then(instance => {
-    });
+    if (this.viewerRef) {
+      WebViewer({
+        path: '../../../assets/lib',
+        initialDoc: '../../../assets/Endrosement.pdf'
+      }, this.viewerRef.nativeElement).then(instance => {
+      });
+    }
   }
 
   onButtonClick(formVersionId: string): void {

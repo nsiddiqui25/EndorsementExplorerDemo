@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EndorsementDemoService } from '../shared/endorsement-demo.service';
+import { EndorsementDemo } from 'src/app/shared/endorsement-demo.model';
 
 @Component({
   selector: 'app-endorsement-demo',
@@ -8,10 +9,19 @@ import { EndorsementDemoService } from '../shared/endorsement-demo.service';
   ]
 })
 export class EndorsementDemoComponent implements OnInit {
+  selectedEndorsement: EndorsementDemo;
 
-  constructor(public service: EndorsementDemoService) { }
+  constructor(private endorsementService: EndorsementDemoService) { }
 
   ngOnInit(): void {
+  }
+
+  onButtonClick(formVersionId: string): void {
+    console.log(formVersionId);
+    this.endorsementService.getUndFormVersion(+formVersionId).subscribe(response => {
+      console.log(response);
+      this.selectedEndorsement = response;
+    });
   }
 
 }

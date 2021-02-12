@@ -10,6 +10,7 @@ using Aspose.Words;
 using System.IO;
 using GroupDocs.Viewer;
 using GroupDocs.Viewer.Options;
+using System.Drawing;
 
 namespace EndorsementDemoAPI.Controllers
 {
@@ -42,19 +43,83 @@ namespace EndorsementDemoAPI.Controllers
                 return NotFound();
             }
             SaveEndorsementDocumentForPreview(id);
+            //HighlightNextEndorsementDocumentForPreview(id);
             return undFormVersion;
-        }
+        }        
 
         private void SaveEndorsementDocumentForPreview(int id)
         {
             var undFormVersion = _context.UndFormVersion.Find(id);
             var getFilePath = undFormVersion.FileName.ToString();
             string newFilePath = "C:\\Users\\nsiddiqui\\source\\repos\\EndorsementDemo\\EndorsementDemoUI\\src\\assets\\";
-            string newFileName = "Endrosement.pdf";
+            string newFileName = "Endrosement.docx";
 
             Document endorsement = new Document(getFilePath);
-            endorsement.Save(newFilePath + newFileName, SaveFormat.Pdf);
+            endorsement.Save(newFilePath + newFileName, SaveFormat.Docx);
         }
+
+        #region Aspose Highlight
+        private void HighlightNextEndorsementDocumentForPreview(int id)
+        {
+            var undFormVersion = _context.UndFormVersion.Find(id);
+            var getFilePath = undFormVersion.FileName.ToString();
+            string newFilePath = "C:\\Users\\nsiddiqui\\source\\repos\\EndorsementDemo\\EndorsementDemoUI\\src\\assets\\";
+            string newFileName = "Endrosement.docx";
+
+            Document endorsement = new Document(getFilePath);
+            DocumentBuilder builder = new DocumentBuilder(endorsement);
+            BookmarkCollection bookmarks = endorsement.Range.Bookmarks;
+
+            foreach (var bookmark in bookmarks)
+            {
+                builder.StartBookmark(bookmark.Name);
+                builder.Font.HighlightColor.Equals(Color.Yellow);
+                builder.EndBookmark(bookmark.Name);
+            }
+            PrintAllBookmarkInfo(bookmarks);
+
+            endorsement.Save(newFilePath + newFileName, SaveFormat.Docx);
+        }
+
+        // Use an iterator and a visitor to print info of every bookmark in the collection.
+        private static void PrintAllBookmarkInfo(BookmarkCollection bookmarks)
+        {
+            BookmarkInfoPrinter bookmarkVisitor = new BookmarkInfoPrinter();
+
+            // Get each bookmark in the collection to accept a visitor that will print its contents.
+            using (IEnumerator<Bookmark> enumerator = bookmarks.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    Bookmark currentBookmark = enumerator.Current;
+
+                    if (currentBookmark != null)
+                    {
+                        currentBookmark.BookmarkStart.Accept(bookmarkVisitor);
+                        currentBookmark.BookmarkEnd.Accept(bookmarkVisitor);
+
+                        Console.WriteLine(currentBookmark.BookmarkStart.GetText());
+                    }
+                }
+            }
+        }
+
+        // Prints contents of every visited bookmark to the console.
+        public class BookmarkInfoPrinter : DocumentVisitor
+        {
+            public override VisitorAction VisitBookmarkStart(BookmarkStart bookmarkStart)
+            {
+                Console.WriteLine($"BookmarkStart name: \"{bookmarkStart.Name}\", Contents: \"{bookmarkStart.Bookmark.Text}\"");
+                return VisitorAction.Continue;
+            }
+
+            public override VisitorAction VisitBookmarkEnd(BookmarkEnd bookmarkEnd)
+            {
+                Console.WriteLine($"BookmarkEnd name: \"{bookmarkEnd.Name}\"");
+                return VisitorAction.Continue;
+            }
+        }
+        #endregion        
 
         #region GroupDoc.Viewer Code
         //Stream stream = GetPageStream();

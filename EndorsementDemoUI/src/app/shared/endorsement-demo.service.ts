@@ -18,6 +18,8 @@ export class EndorsementDemoService {
 
   getUndFormVersion(formVersionId: number): Observable<EndorsementDemo> {
     return this.http.get<EndorsementDemo>(this.baseURL + formVersionId);
+    // return this.http.get<EndorsementDemo>(`${this.baseURL}pdf/${formVersionId}`);
+
     // .pipe(
     //   map(response => {
     //     console.log(response);
@@ -28,7 +30,13 @@ export class EndorsementDemoService {
     // );
   }
 
+  getBookmarkNames(formVersionId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseURL}bookmarks/${formVersionId}`);
+  }
 
+  highlightBookmarkNames(blankCount: string): Observable<EndorsementDemo> {
+    return this.http.get<EndorsementDemo>(`${this.baseURL}highlight/${blankCount}`);
+  }
 }
 
 export interface DemoDto {

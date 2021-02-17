@@ -11,6 +11,7 @@ using System.IO;
 using GroupDocs.Viewer;
 using GroupDocs.Viewer.Options;
 using System.Drawing;
+using System.Text;
 
 namespace EndorsementDemoAPI.Controllers
 {
@@ -19,6 +20,7 @@ namespace EndorsementDemoAPI.Controllers
     public class UndFormVersionsController : ControllerBase
     {
         private readonly ELD_PRODUCTION_31Context _context;
+        private const string newFilePath = "C:\\Users\\nsiddiqui\\source\\repos\\EndorsementDemo\\EndorsementDemoUI\\src\\assets\\";
 
         public UndFormVersionsController(ELD_PRODUCTION_31Context context)
         {
@@ -43,42 +45,163 @@ namespace EndorsementDemoAPI.Controllers
                 return NotFound();
             }
             SaveEndorsementDocumentForPreview(id);
+            //HighlightFirstEndorsementForPreview(id);
             //HighlightNextEndorsementDocumentForPreview(id);
             return undFormVersion;
-        }        
-
-        private void SaveEndorsementDocumentForPreview(int id)
-        {
-            var undFormVersion = _context.UndFormVersion.Find(id);
-            var getFilePath = undFormVersion.FileName.ToString();
-            string newFilePath = "C:\\Users\\nsiddiqui\\source\\repos\\EndorsementDemo\\EndorsementDemoUI\\src\\assets\\";
-            string newFileName = "Endrosement.docx";
-
-            Document endorsement = new Document(getFilePath);
-            endorsement.Save(newFilePath + newFileName, SaveFormat.Docx);
         }
 
-        #region Aspose Highlight
-        private void HighlightNextEndorsementDocumentForPreview(int id)
+        // GET: api/UndFormVersions/5
+        // check in Postman for Bookmark Names
+        [HttpGet("pdf/{id}")]
+        public async Task<IActionResult> GetUndFormVersionPdf(int id)
+        {
+            var undFormVersion = await _context.UndFormVersion.FindAsync(id);
+
+            if (undFormVersion == null)
+            {
+                return NotFound();
+            }
+
+            // SaveEndorsementDocumentForPreview(id);
+            // var fileName = HighlightNextEndorsementDocumentForPreview(id);
+
+            var getFilePath = undFormVersion.FileName.ToString();
+
+            Document endorsement = new Document(getFilePath);
+            //endorsement.Save(newFilePath + newFileName, SaveFormat.Docx);
+            using var stream = new MemoryStream();
+            endorsement.Save(stream, SaveFormat.Pdf);
+            var bytes = stream.ToArray();
+
+            return File(bytes, "application/pdf");
+        }
+
+        [HttpGet("bookmarks/{id}")]
+        public IEnumerable<string> GetBookmarkNames(int id)
         {
             var undFormVersion = _context.UndFormVersion.Find(id);
             var getFilePath = undFormVersion.FileName.ToString();
-            string newFilePath = "C:\\Users\\nsiddiqui\\source\\repos\\EndorsementDemo\\EndorsementDemoUI\\src\\assets\\";
-            string newFileName = "Endrosement.docx";
+
+            string newFileName = "EndrosementBlankPreview.pdf";
 
             Document endorsement = new Document(getFilePath);
             DocumentBuilder builder = new DocumentBuilder(endorsement);
             BookmarkCollection bookmarks = endorsement.Range.Bookmarks;
 
-            foreach (var bookmark in bookmarks)
-            {
-                builder.StartBookmark(bookmark.Name);
-                builder.Font.HighlightColor.Equals(Color.Yellow);
-                builder.EndBookmark(bookmark.Name);
-            }
-            PrintAllBookmarkInfo(bookmarks);
+            var bookmarkNames = bookmarks.Select(b => b.Name);
 
-            endorsement.Save(newFilePath + newFileName, SaveFormat.Docx);
+            return bookmarkNames;
+        }
+
+        [HttpGet("highlight/{id}")]
+        public IActionResult HighlightBookmarkNames(int id, string bookmarkName)
+        {
+            HighlightNextEndorsementDocumentForPreview(id, bookmarkName);
+            return Ok();
+        }        
+
+        //[HttpGet("[action]")]
+        //public IActionResult GetNextHighlight(int id)
+        //{
+        //    //var undFormVersion = await _context.UndFormVersion.FindAsync(id);
+
+        //    //if (undFormVersion == null)
+        //    //{
+        //    //    return NotFound();
+        //    //}            
+        //    HighlightNextEndorsementDocumentForPreview(id);
+        //    return Ok();
+        //}
+
+        //[HttpGet("{action}")]
+        //public IActionResult HighlightNextBlank(int id)
+        //{
+        //    HighlightNextEndorsementDocumentForPreview(id);
+        //    return Ok();
+        //}
+
+        private void SaveEndorsementDocumentForPreview(int id)
+        {
+            var undFormVersion = _context.UndFormVersion.Find(id);
+            var getFilePath = undFormVersion.FileName.ToString();
+            string newFileName = "Endrosement.doc";
+
+            Document endorsement = new Document(getFilePath);
+            endorsement.Save(newFilePath + newFileName, SaveFormat.Doc);
+        }
+
+        #region Aspose Highlight
+        private string HighlightNextEndorsementDocumentForPreview(int id, string bookmarkName)
+        {
+            var undFormVersion = _context.UndFormVersion.Find(id);
+            var getFilePath = undFormVersion.FileName.ToString();
+
+            string newFileName = "EndrosementBlankPreview.pdf";
+
+            Document endorsement = new Document(getFilePath);
+            DocumentBuilder builder = new DocumentBuilder(endorsement);
+
+            // Highlights bookmark by passing bookmark name as a string.  
+                // Debug GetBookmarkNames(formVersionId) to get collection of bookmark names from Endorsement Doc
+            Bookmark bookmark = endorsement.Range.Bookmarks[bookmarkName];
+            builder.MoveToBookmark(bookmark.Name);
+            builder.Font.HighlightColor = Color.Yellow;
+            builder.Writeln(bookmark.Name);
+
+            //// Finds, highlights, and labels all bookmarks on a document by their names
+            //BookmarkCollection bookmarks = endorsement.Range.Bookmarks;
+            //foreach (var bm in bookmarks)
+            //{
+            //    builder.MoveToBookmark(bm.Name);
+            //    builder.Font.HighlightColor = Color.Yellow;
+            //    builder.Writeln(bm.Name);
+            //}
+
+            //PrintAllBookmarkInfo(bookmarks);
+
+            var savedFileName = newFilePath + newFileName;
+            endorsement.Save(savedFileName, SaveFormat.Pdf);
+            return savedFileName;
+        }
+
+        private string HighlightFirstEndorsementForPreview(int id)
+        {
+            var undFormVersion = _context.UndFormVersion.Find(id);
+            var getFilePath = undFormVersion.FileName.ToString();
+
+            string newFileName = "EndrosementBlankPreview.pdf";
+
+            Document endorsement = new Document(getFilePath);
+            DocumentBuilder builder = new DocumentBuilder(endorsement);
+            Bookmark firstBbookmark = endorsement.Range.Bookmarks[0];
+
+            builder.MoveToBookmark(firstBbookmark.Name);
+            builder.Font.HighlightColor = Color.Yellow;
+            builder.Writeln(firstBbookmark.Name);            
+            
+            var savedFileName = newFilePath + newFileName;
+            endorsement.Save(savedFileName, SaveFormat.Pdf);
+            return savedFileName;
+        }
+
+        private string HighlightNextEndorsementForPreview(int id, string bookmarkName)
+        {
+            var undFormVersion = _context.UndFormVersion.Find(id);
+            var getFilePath = undFormVersion.FileName.ToString();
+
+            string newFileName = "EndrosementBlankPreview.pdf";
+
+            Document endorsement = new Document(getFilePath);
+            DocumentBuilder builder = new DocumentBuilder(endorsement);
+            Bookmark firstBbookmark = endorsement.Range.Bookmarks[bookmarkName];
+
+            builder.MoveToBookmark(bookmarkName);
+            builder.Font.HighlightColor = Color.Yellow;
+            builder.Writeln(bookmarkName);
+
+            var savedFileName = newFilePath + newFileName;
+            endorsement.Save(savedFileName, SaveFormat.Pdf);
+            return savedFileName;
         }
 
         // Use an iterator and a visitor to print info of every bookmark in the collection.

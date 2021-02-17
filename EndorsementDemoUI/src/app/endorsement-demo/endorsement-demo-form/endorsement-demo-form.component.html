@@ -4,16 +4,26 @@
     height: 100vh;
 }
 </style>
-  <div align="center">
+  <div>
     <div>
-      <button> < </button>
-      <button> > </button>
+      <button (click)="nextHightlight(selectedEndorsement.formVersionId, selectedEndorsement.blankCount)"> > </button>
       <br />
       <button (click)="showPreview()">Preview</button>
     </div>
   </div>
 <br />
-<div [hidden]="!previewDoc">
+<div >
   <!-- <pdf-viewer [src]="pdfSrc" [render-text]="true"style="display: block;"></pdf-viewer> -->
   <div #viewer class="webViewer"></div>
 </div>
+<!-- <div *ngIf="isLoading" class="flex-container h-100">
+  <div class="row h-100 align-content-center">
+    <div class="col-12 text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<iframe [hidden]="isLoading" #pdfcomponent class="w-100 h-100" name="plugin" type="application/pdf" (load)="pdfLoading()" >
+</iframe> -->

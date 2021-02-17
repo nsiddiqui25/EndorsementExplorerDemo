@@ -17,8 +17,14 @@ export class EndorsementDemoComponent implements OnInit {
   }
 
   onButtonClick(formVersionId: string): void {
-    console.log(formVersionId);
-    this.endorsementService.getUndFormVersion(+formVersionId).subscribe(response => {
+    const versionId = +formVersionId;
+    console.log('formVersionId', versionId);
+
+    this.endorsementService.getBookmarkNames(versionId).subscribe(response => {
+      console.log('bookmark names', response);
+    });
+
+    this.endorsementService.getUndFormVersion(versionId).subscribe(response => {
       console.log(response);
       this.selectedEndorsement = response;
     });

@@ -44,7 +44,7 @@ namespace EndorsementDemoAPI.Controllers
             {
                 return NotFound();
             }
-            SaveEndorsementDocumentForPreview(id);
+            //SaveEndorsementDocumentForPreview(id);
             //HighlightFirstEndorsementForPreview(id);
             //HighlightNextEndorsementDocumentForPreview(id);
             return undFormVersion;

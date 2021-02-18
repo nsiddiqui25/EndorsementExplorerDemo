@@ -16,7 +16,7 @@ export class EndorsementDemoFormComponent implements AfterViewInit, OnChanges {
   selectedEndorsement: EndorsementDemo;
 
   get basePdfPath(): string {
-    return `https://localhost:44328/api/UndFormVersions/pdf/${this.selectedEndorsement.formApprovedId}`;
+    return `https://localhost:44328/api/UndFormVersions/pdf/${this.selectedEndorsement.formVersionId}`;
   }
 
   // search: string;
@@ -58,10 +58,15 @@ export class EndorsementDemoFormComponent implements AfterViewInit, OnChanges {
     console.log('formVersionId', versionId);
 
     let c: any;
-    // tslint:disable-next-line:forin
     for (c in count) {
-      console.log(count[c]);
+      if (c.value) {
+        console.log(count[c]);
+      }
     }
+  }
+    // for (c in count) {
+    //   console.log(count[c]);
+    // }
 
     // this.endorsementService.getBookmarkNames(versionId).subscribe(response => {
     //   response.forEach(element => {
@@ -70,7 +75,6 @@ export class EndorsementDemoFormComponent implements AfterViewInit, OnChanges {
     //     });
     //   });
     // });
-  }
 
   showPreview(){
     this.previewDoc = true;

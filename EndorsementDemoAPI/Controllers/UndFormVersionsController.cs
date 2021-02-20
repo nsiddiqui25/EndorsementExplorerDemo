@@ -94,9 +94,10 @@ namespace EndorsementDemoAPI.Controllers
         }
 
         [HttpGet("highlight/{id}")]
-        public IActionResult HighlightBookmarkNames(int id, string bookmarkName)
+        public IActionResult HighlightBookmarkNames(int id)
         {
-            HighlightNextEndorsementDocumentForPreview(id, bookmarkName);
+            HighlightFirstEndorsementForPreview(id);
+            //HighlightNextEndorsementDocumentForPreview(id, bookmarkIndex);
             return Ok();
         }        
 
@@ -131,7 +132,7 @@ namespace EndorsementDemoAPI.Controllers
         }
 
         #region Aspose Highlight
-        private string HighlightNextEndorsementDocumentForPreview(int id, string bookmarkName)
+        private string HighlightNextEndorsementDocumentForPreview(int id, int bookmarkIndex)
         {
             var undFormVersion = _context.UndFormVersion.Find(id);
             var getFilePath = undFormVersion.FileName.ToString();
@@ -143,7 +144,7 @@ namespace EndorsementDemoAPI.Controllers
 
             // Highlights bookmark by passing bookmark name as a string.  
                 // Debug GetBookmarkNames(formVersionId) to get collection of bookmark names from Endorsement Doc
-            Bookmark bookmark = endorsement.Range.Bookmarks[bookmarkName];
+            Bookmark bookmark = endorsement.Range.Bookmarks[bookmarkIndex];
             builder.MoveToBookmark(bookmark.Name);
             builder.Font.HighlightColor = Color.Yellow;
             builder.Writeln(bookmark.Name);
@@ -173,12 +174,14 @@ namespace EndorsementDemoAPI.Controllers
 
             Document endorsement = new Document(getFilePath);
             DocumentBuilder builder = new DocumentBuilder(endorsement);
-            Bookmark firstBbookmark = endorsement.Range.Bookmarks[0];
+            BookmarkCollection bookmarks = endorsement.Range.Bookmarks;
 
-            builder.MoveToBookmark(firstBbookmark.Name);
-            builder.Font.HighlightColor = Color.Yellow;
-            builder.Writeln(firstBbookmark.Name);            
-            
+            foreach (var bookmark in bookmarks)
+            {
+                builder.MoveToBookmark(bookmark.Name);
+                builder.Font.HighlightColor = Color.Yellow;
+                builder.Writeln(bookmark.Name);
+            }
             var savedFileName = newFilePath + newFileName;
             endorsement.Save(savedFileName, SaveFormat.Pdf);
             return savedFileName;
@@ -195,9 +198,9 @@ namespace EndorsementDemoAPI.Controllers
             DocumentBuilder builder = new DocumentBuilder(endorsement);
             Bookmark firstBbookmark = endorsement.Range.Bookmarks[bookmarkName];
 
-            builder.MoveToBookmark(bookmarkName);
+            builder.MoveToBookmark(firstBbookmark.Name);
             builder.Font.HighlightColor = Color.Yellow;
-            builder.Writeln(bookmarkName);
+            builder.Writeln(firstBbookmark.Name);
 
             var savedFileName = newFilePath + newFileName;
             endorsement.Save(savedFileName, SaveFormat.Pdf);

@@ -34,6 +34,7 @@ export class EndorsementDemoService {
     return this.http.get<string[]>(`${this.baseURL}bookmarks/${formVersionId}`);
   }
 
+  // incomplete
   highlightBookmarkNames(blankCount: string): Observable<EndorsementDemo> {
     return this.http.get<EndorsementDemo>(`${this.baseURL}highlight/${blankCount}`);
   }

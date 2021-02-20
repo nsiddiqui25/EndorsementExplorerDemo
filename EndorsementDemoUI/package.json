@@ -21,8 +21,9 @@
     "@angular/router": "~11.1.0",
     "@pdftron/webviewer": "^7.2.0",
     "@types/pdfjs-dist": "~2.0.1",
-    "ng2-pdf-viewer": "^6.3.2",
-    "ngx-extended-pdf-viewer": "^8.0.0-beta.5",
+    "i": "^0.3.6",
+    "ng2-pdf-viewer": "^6.4.0",
+    "npm": "^7.5.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"

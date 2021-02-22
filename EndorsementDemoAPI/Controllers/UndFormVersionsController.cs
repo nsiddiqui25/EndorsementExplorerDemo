@@ -64,10 +64,21 @@ namespace EndorsementDemoAPI.Controllers
 
             // SaveEndorsementDocumentForPreview(id);
             // var fileName = HighlightNextEndorsementDocumentForPreview(id);
-
             var getFilePath = undFormVersion.FileName.ToString();
 
             Document endorsement = new Document(getFilePath);
+            DocumentBuilder builder = new DocumentBuilder(endorsement);
+            BookmarkCollection bookmarks = endorsement.Range.Bookmarks;
+
+            foreach (var bookmark in bookmarks)
+            {
+                if (bookmark.Name.StartsWith(undFormVersion.FormVersionNo.Substring(0,6)))
+                {
+                    builder.MoveToBookmark(bookmark.Name);
+                    builder.Font.HighlightColor = Color.Yellow;
+                    builder.Write("Blank " + bookmark.Name.Substring(bookmark.Name.Length - 2) + " ");
+                }
+            }
             //endorsement.Save(newFilePath + newFileName, SaveFormat.Docx);
             using var stream = new MemoryStream();
             endorsement.Save(stream, SaveFormat.Pdf);
@@ -82,7 +93,7 @@ namespace EndorsementDemoAPI.Controllers
             var undFormVersion = _context.UndFormVersion.Find(id);
             var getFilePath = undFormVersion.FileName.ToString();
 
-            string newFileName = "EndrosementBlankPreview.pdf";
+            //string newFileName = "EndrosementBlankPreview.pdf";
 
             Document endorsement = new Document(getFilePath);
             DocumentBuilder builder = new DocumentBuilder(endorsement);
@@ -96,7 +107,7 @@ namespace EndorsementDemoAPI.Controllers
         [HttpGet("highlight/{id}")]
         public IActionResult HighlightBookmarkNames(int id)
         {
-            HighlightFirstEndorsementForPreview(id);
+            HighlightEndorsementForPreview(id);
             //HighlightNextEndorsementDocumentForPreview(id, bookmarkIndex);
             return Ok();
         }        
@@ -165,7 +176,7 @@ namespace EndorsementDemoAPI.Controllers
             return savedFileName;
         }
 
-        private string HighlightFirstEndorsementForPreview(int id)
+        private string HighlightEndorsementForPreview(int id)
         {
             var undFormVersion = _context.UndFormVersion.Find(id);
             var getFilePath = undFormVersion.FileName.ToString();
@@ -178,9 +189,12 @@ namespace EndorsementDemoAPI.Controllers
 
             foreach (var bookmark in bookmarks)
             {
-                builder.MoveToBookmark(bookmark.Name);
-                builder.Font.HighlightColor = Color.Yellow;
-                builder.Writeln(bookmark.Name);
+                if ((bookmark.Name == "insured_name1") || (bookmark.Name == "policy_period1") || (bookmark.Name == "policy_number1") || (bookmark.Name == "effective_date1"))
+                {
+                    builder.MoveToBookmark(bookmark.Name);
+                    builder.Font.HighlightColor = Color.Yellow;
+                    builder.Writeln(bookmark.Name);
+                }
             }
             var savedFileName = newFilePath + newFileName;
             endorsement.Save(savedFileName, SaveFormat.Pdf);
